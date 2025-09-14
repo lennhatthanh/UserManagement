@@ -5,7 +5,7 @@ const userForm = document.getElementById("user-form");
 const confirmDelete = document.getElementById("confirm-delete");
 let errors = [];
 function openUserDialog() {
-    userDialog.showModal();
+    userDialog.show();
 }
 function closeUserDialog() {
     userDialog.close();
@@ -15,7 +15,7 @@ function closeDeleteModal() {
 }
 function deleteUser(id) {
     userDelete = id;
-    deleteDialog.showModal();
+    deleteDialog.show();
 }
 function validated(name, phone) {
     errors = [];
