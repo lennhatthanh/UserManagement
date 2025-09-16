@@ -4,11 +4,25 @@ let users = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user
 const userForm = document.getElementById("user-form");
 const confirmDelete = document.getElementById("confirm-delete");
 let errors = [];
-function openUserDialog() {
+let editAtive = null;
+function openUserDialog(id) {
+    const found = users.find((user) => user.id === id);
+    if (id) {
+        document.querySelector("#name").value = found.name;
+        document.querySelector("#email").value = found.email;
+        document.querySelector("#phone").value = found.phone;
+        document.querySelector("#submit-btn").textContent = "Cập Nhật Người Dùng";
+        document.querySelector("#dialog-title").textContent = "Cập nhật người dùng";
+        editAtive = id;
+    } else {
+        document.querySelector("#dialog-title").textContent = "Thêm mới người dùng";
+        document.querySelector("#submit-btn").textContent = "Thêm Người Dùng"; 
+    }
     userDialog.show();
 }
 function closeUserDialog() {
     userDialog.close();
+    userForm.reset();
 }
 function closeDeleteModal() {
     deleteDialog.close();
@@ -17,6 +31,12 @@ function deleteUser(id) {
     userDelete = id;
     deleteDialog.show();
 }
+// xử lý sự kiện click outside -> close dialog userDialog
+userDialog.addEventListener("click", (e) => {
+    if (e.target === userDialog) {
+        closeUserDialog();
+    }
+});
 function validated(name, phone) {
     errors = [];
     const nameError = document.getElementById("name-error");
@@ -35,7 +55,6 @@ function validated(name, phone) {
 confirmDelete.addEventListener("click", (e) => {
     e.preventDefault();
     users = users.filter((user) => user.id !== userDelete);
-    console.log(users);
     saveUsers();
     renderUsers();
     closeDeleteModal();
@@ -43,7 +62,6 @@ confirmDelete.addEventListener("click", (e) => {
 function saveUsers() {
     localStorage.setItem("user", JSON.stringify(users));
 }
-
 function renderUsers() {
     const userList = document.getElementById("users-grid");
     const emptyState = document.getElementById("empty-state");
@@ -79,6 +97,14 @@ userDialog.addEventListener("submit", (e) => {
     if (errors.length > 0) {
         return;
     } else {
+        if(userForm.querySelector("#submit-btn").textContent === "Cập Nhật Người Dùng") {
+            const found = users.findIndex((user) => user.id === editAtive);
+            users[found] = {...users[found], name, email, phone};
+            saveUsers();
+            renderUsers();
+            closeUserDialog();
+            return;
+        }
         const user = {
             id: Date.now().toString(),
             name,
