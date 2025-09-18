@@ -16,7 +16,7 @@ function openUserDialog(id) {
         editAtive = id;
     } else {
         document.querySelector("#dialog-title").textContent = "Thêm mới người dùng";
-        document.querySelector("#submit-btn").textContent = "Thêm Người Dùng"; 
+        document.querySelector("#submit-btn").textContent = "Thêm Người Dùng";
     }
     userDialog.show();
 }
@@ -97,9 +97,9 @@ userDialog.addEventListener("submit", (e) => {
     if (errors.length > 0) {
         return;
     } else {
-        if(userForm.querySelector("#submit-btn").textContent === "Cập Nhật Người Dùng") {
+        if (userForm.querySelector("#submit-btn").textContent === "Cập Nhật Người Dùng") {
             const found = users.findIndex((user) => user.id === editAtive);
-            users[found] = {...users[found], name, email, phone};
+            users[found] = { ...users[found], name, email, phone };
             saveUsers();
             renderUsers();
             closeUserDialog();
@@ -116,5 +116,12 @@ userDialog.addEventListener("submit", (e) => {
         renderUsers();
         userForm.reset();
         closeUserDialog();
+    }
+});
+
+window.addEventListener("storage", (e) => {
+    if (e.key === "user") {
+        users = JSON.parse(e.newValue);
+        renderUsers();
     }
 });
